@@ -1,0 +1,2 @@
+EXCEPTIONS:
+articles/ai-studio/ai-services/faq.yml line 39 needs portal
