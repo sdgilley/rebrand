@@ -1,6 +1,6 @@
 search,replace
 OpenAI,OpenXX
-Azure Machine Learning studio,Azure Machine Learning xXXXXX
+Azure Machine Learning studio,Azure Machine Learning XXXXXX
 Azure Machine Learning Studio,Azure Machine Learning XXXXXX
 AI Studio project,AI Foundry project
 AI studio project,AI Foundry project
@@ -41,8 +41,7 @@ AI studio,AI Foundry
 studio UI,AI Foundry portal
 Studio UI,AI Foundry portal
 OpenXX,OpenAI
-Azure Machine Learning XXXXXX,Azure Machine Learning Studio
-Azure Machine Learning xXXXXX,Azure Machine Learning studio
+Azure Machine Learning XXXXXX,Azure Machine Learning studio
 #find-azure-ai-studio-resources-in-the-azure-portal,#find-azure-ai-foundry-resources-in-the-azure-portal
 #create-a-hub-in-ai-studio,#create-a-hub-in-ai-foundry-portal
 #assigning-roles-in-ai-studio,#assigning-roles-in-ai-foundry-portal
