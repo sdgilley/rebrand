@@ -9,7 +9,7 @@ import pandas as pd
 
 # Specify you path for the directory
 # make sure you have checked out the branch you want to use for the replacements
-path = 'C:/GitPrivate/azure-ai-docs-pr2/articles/machine-learning/' # machine-learning dir
+path = 'C:/GitPrivate/azure-ai-docs-pr2/articles/ai-studio/' # machine-learning dir
 
 # search through the directory and replace terms
 # read replacements from csv file:
