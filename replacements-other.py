@@ -1,5 +1,4 @@
-## Run this script to make replacements in your local repository
-# This script goes through all sub-directories from the specified directory.
+## This is a special case script that skips directories that have a large number of replacements
 
 import os
 import pandas as pd
@@ -10,7 +9,6 @@ path = 'C:/GitPrivate/azure-ai-docs-pr2/articles/'
 
 # search through the directory and replace terms
 # read replacements from csv file:
-# replacements = pd.read_csv('ml-replacements.csv').to_dict('records') # machine-learning dir
 replacements = pd.read_csv('replacements.csv').to_dict('records') # all other dirs
 
 # loop through all directories in the path, 
