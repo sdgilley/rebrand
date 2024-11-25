@@ -10,6 +10,10 @@ path = 'C:/GitPrivate/azure-ai-docs-pr2/articles/'
 # search through the directory and replace terms
 # read replacements from csv file:
 replacements = pd.read_csv('replacements.csv').to_dict('records') # all other dirs
+# just to be safe, remove the studio UI replacement
+replacements = [replacement for replacement in replacements if replacement['search'] != 'Studio UI']
+replacements = [replacement for replacement in replacements if replacement['search'] != 'studio UI']
+
 
 # loop through all directories in the path, 
 # and all files in the directories
