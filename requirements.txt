@@ -1,0 +1,16 @@
+# Requirements for rebrand project
+# Text processing and data manipulation
+pandas==2.3.3
+
+# Environment variable management
+python-dotenv==1.2.1
+
+# Progress bar display
+tqdm==4.67.1
+
+# Dependencies automatically installed with pandas
+numpy==2.3.4
+python-dateutil==2.9.0.post0
+pytz==2025.2
+six==1.17.0
+tzdata==2025.2
