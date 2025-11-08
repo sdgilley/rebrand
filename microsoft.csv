@@ -1,6 +1,7 @@
 search,replace
 Azure AI Foundry,Microsoft Foundry
 an Microsoft,a Microsoft
+An Microsoft,A Microsoft
 #standard-deployment-in-azure-ai-foundry-resources,#standard-deployment-in-microsoft-foundry-resources
 #azure-ai-foundry-project-roles,#microsoft-foundry-project-roles
 #create-a-guardrail-in-azure-ai-foundry,#create-a-guardrail-in-microsoft-foundry
