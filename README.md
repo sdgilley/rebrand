@@ -1,6 +1,8 @@
-# rebrand
+# Rebrand - search and replace text
 
 Helpful script for rebranding text across multiple files in a directory.
+
+![Rebrand Tool](media/replace.png)
 
 ## Prerequisites
 
