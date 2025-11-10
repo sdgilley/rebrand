@@ -129,3 +129,54 @@ def safe_replace(text, search_term, replace_term, max_replacements=None, debug_m
         print(f"    Preserved {preserved_count} '{search_term}' in 'formerly' contexts")
     
     return result
+
+def generate_article_cleanup_rules(always_csv_path, debug_mode=False):
+    """Generate 'an X' -> 'a X' cleanup rules from always.csv patterns.
+    
+    Finds patterns in always.csv where "Azure AI X" becomes just "X" and generates
+    article cleanup rules for "an X" -> "a X" variations.
+    
+    Args:
+        always_csv_path: Path to the always.csv file
+        debug_mode: Whether to print debug information
+    
+    Returns:
+        list: List of (search, replace) tuples for article cleanup
+    """
+    if not os.path.exists(always_csv_path):
+        if debug_mode:
+            print(f"Warning: {always_csv_path} not found")
+        return []
+    
+    df = pd.read_csv(always_csv_path)
+    cleanup_rules = []
+    
+    # Find patterns where "Azure AI X" becomes just "X" (single word)
+    for _, row in df.iterrows():
+        search_term = row['search']
+        replace_term = row['replace']
+        
+        # Skip if not an Azure AI pattern
+        if not search_term.startswith('Azure AI '):
+            continue
+            
+        # Extract the service name after "Azure AI "
+        service_name = search_term[9:]  # Remove "Azure AI " prefix
+        
+        # Check if replacement is just the service name (single word, no spaces)
+        # This indicates "Azure AI X" -> "X" pattern
+        if replace_term == service_name and ' ' not in service_name:
+            # Generate article cleanup variations
+            variations = [
+                (f"an {service_name}", f"a {service_name}"),
+                (f"An {service_name}", f"A {service_name}"),
+                (f"an [{service_name}", f"a [{service_name}"),
+                (f"An [{service_name}", f"A [{service_name}"),
+            ]
+            
+            cleanup_rules.extend(variations)
+            
+            if debug_mode:
+                print(f"Generated article cleanup rules for: {service_name}")
+    
+    return cleanup_rules

@@ -48,6 +48,8 @@ The scripts use CSV configuration files in the `patterns/` folder:
 - `always.csv` - Terms that are always replaced 
 - `cleanup.csv` - Final cleanup replacements applied last
 
+When you modify `always.csv` - run `generate_article_cleanup.py` afterwards to take care of variations of AN Azure that should now ready A XXX.
+
 ## How It Works
 
 ### Markdown Files (`rebrand-aif-md.py`)
@@ -102,6 +104,14 @@ This script provides simpler replacement logic for `.yml` files:
    - Verify never-replace terms remain unchanged
 
 1. If you find more terms you want to add to one of the files, just select all and discard changes in your fork to start again.
+
+## What it doesn't do
+
+After running the script, there are still a few more things you need to look at manually:
+
+* Zone pivots
+* docFx.json - check here for things like the titleSuffix
+* 
 
 ## Files
 
