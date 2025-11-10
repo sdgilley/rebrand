@@ -48,7 +48,7 @@ The scripts use CSV configuration files in the `patterns/` folder:
 - `always.csv` - Terms that are always replaced 
 - `cleanup.csv` - Final cleanup replacements applied last
 
-When you modify `always.csv` - run `generate_article_cleanup.py` afterwards to take care of variations of AN Azure that should now ready A XXX.
+When you modify `always.csv` - run `generate_article_cleanup.py` afterwards to take care of variations of AN Azure that should now ready A XXX. (Make sure you REVIEW the new always.csv to make sure that the new replacements are correct.)
 
 ## How It Works
 
