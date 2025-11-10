@@ -44,9 +44,9 @@ DIRECTORY_PATH=C:\path\to\your\target\directory
 
 The scripts use CSV configuration files in the `patterns/` folder:
 
-- `always.csv` - Terms that are always replaced (compound phrases and special formatting)
+- `never.csv` - Terms that should never be changed
+- `always.csv` - Terms that are always replaced 
 - `cleanup.csv` - Final cleanup replacements applied last
-- `never.csv` - Terms that should never be changed (URLs, code references, etc.)
 
 ## How It Works
 
@@ -83,13 +83,9 @@ This script provides simpler replacement logic for `.yml` files:
 
 ## Usage
 
-1. **Create a new branch** in your target repository:
+1. **Create a new branch** in your fork of azure-ai-docs-pr, based on your release branch.
 
-   ```bash
-   git checkout -b rebrand-foundry
-   ```
-
-2. **Run the appropriate script**:
+1. **Run the appropriate script** from this repo:
 
    ```bash
    # For markdown files
@@ -99,20 +95,13 @@ This script provides simpler replacement logic for `.yml` files:
    python rebrand-aif-yml.py
    ```
 
-3. **Enable debug mode** to see detailed changes:
 
-   ```bash
-   # Windows PowerShell
-   $env:DEBUG="true"; python rebrand-aif-md.py
-   
-   # Command line
-   set DEBUG=true && python rebrand-aif-md.py
-   ```
-
-4. **Review the changes**:
-   - Check git diffs to verify expected changes
+1. **Review the changes**:
+   - Check git diffs in your fork to verify expected changes
    - Ensure historical contexts are preserved
    - Verify never-replace terms remain unchanged
+
+1. If you find more terms you want to add to one of the files, just select all and discard changes in your fork to start again.
 
 ## Files
 
