@@ -1,6 +1,6 @@
 # Azure AI Foundry Rebranding Scripts
 
-Specialized scripts for replacing "Azure AI Foundry" terminology with "Microsoft Foundry" across markdown and YAML files, with intelligent handling of first mentions and context preservation.
+Specialized scripts for replacing terminology across markdown and YAML files, with intelligent handling of first mentions and context preservation.
 
 ![Rebrand Tool](media/replace.png)
 
