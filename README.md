@@ -1,6 +1,6 @@
-# Rebrand - search and replace text
+# Azure AI Foundry Rebranding Scripts
 
-Helpful script for rebranding text across multiple files in a directory.
+Specialized scripts for replacing "Azure AI Foundry" terminology with "Microsoft Foundry" across markdown and YAML files, with intelligent handling of first mentions and context preservation.
 
 ![Rebrand Tool](media/replace.png)
 
@@ -35,55 +35,100 @@ Helpful script for rebranding text across multiple files in a directory.
 
 ## Configuration
 
-1. **Edit the `.env` file** to specify your configuration:
+**Edit the `.env` file** to specify the directory to process:
 
-   ```env
-   # Directory path to process
-   DIRECTORY_PATH=C:\path\to\your\target\directory
-   
-   # CSV file containing search and replace terms
-   REPLACEMENTS_FILE=microsoft.csv
-   ```
+```env
+# Directory path to process
+DIRECTORY_PATH=C:\path\to\your\target\directory
+```
 
-2. **Edit your CSV file** (e.g., `microsoft.csv`) with search and replace terms:
+The scripts use CSV configuration files in the `patterns/` folder:
 
-   ```csv
-   search,replace
-   Azure AI Foundry,Microsoft Foundry
-   old-term,new-term
-   ```
+- `always.csv` - Terms that are always replaced (compound phrases and special formatting)
+- `cleanup.csv` - Final cleanup replacements applied last
+- `never.csv` - Terms that should never be changed (URLs, code references, etc.)
+
+## How It Works
+
+### Markdown Files (`rebrand-aif-md.py`)
+
+This script implements sophisticated replacement logic for `.md` files:
+
+1. **Front Matter Detection**: Detects YAML front matter and applies different rules
+2. **First Mention Logic**:
+   - In metadata/front matter: "Azure AI Foundry" → "Microsoft Foundry"
+   - First occurrence in body: "Azure AI Foundry" → "Microsoft Foundry"
+   - Subsequent occurrences: "Azure AI Foundry" → "Foundry"
+3. **Context Preservation**: Preserves historical references with "formerly", "previously", "originally"
+4. **Protection**: Never-replace terms are protected during processing
+5. **Processing Order**:
+   - Load and protect never-replace terms
+   - Apply replacements from `always.csv`
+   - Apply main "Azure AI Foundry" logic with first mention handling
+   - Apply final cleanup from `cleanup.csv`
+   - Restore protected terms
+
+### YAML Files (`rebrand-aif-yml.py`)
+
+This script provides simpler replacement logic for `.yml` files:
+
+1. **Uniform Replacement**: All "Azure AI Foundry" → "Microsoft Foundry" (no first mention logic)
+2. **Protection**: Never-replace terms are still protected
+3. **Processing Order**:
+   - Load and protect never-replace terms  
+   - Apply replacements from `always.csv`
+   - Replace all "Azure AI Foundry" instances
+   - Apply cleanup from `cleanup.csv`
+   - Restore protected terms
 
 ## Usage
 
-1. **Create a new branch** from upstream main in your target repository:
+1. **Create a new branch** in your target repository:
 
    ```bash
-   git checkout -b rebrand-updates
+   git checkout -b rebrand-foundry
    ```
 
-2. **Run the script**:
+2. **Run the appropriate script**:
 
    ```bash
-   python replacements.py
-   ```
+   # For markdown files
+   python rebrand-aif-md.py
    
-   The script will:
-   - Process all `.md` and `.yml` files in the specified directory
-   - Show progress and total files processed
-   - Make replacements based on your CSV file
+   # For YAML files  
+   python rebrand-aif-yml.py
+   ```
 
-3. **Review the changes**:
-   - Check the diffs to verify expected changes
-   - Ensure no unintended changes were made
+3. **Enable debug mode** to see detailed changes:
 
-4. **If you need to add more replacements**:
-   - Add new terms to your CSV file
-   - Discard all changes in your branch to start clean
-   - Run the script again
+   ```bash
+   # Windows PowerShell
+   $env:DEBUG="true"; python rebrand-aif-md.py
+   
+   # Command line
+   set DEBUG=true && python rebrand-aif-md.py
+   ```
+
+4. **Review the changes**:
+   - Check git diffs to verify expected changes
+   - Ensure historical contexts are preserved
+   - Verify never-replace terms remain unchanged
 
 ## Files
 
-- `replacements.py` - Main script for processing files
-- `.env` - Configuration file for paths and settings
+### Core Scripts
+
+- `rebrand-aif-md.py` - Main script for markdown files with first mention logic
+- `rebrand-aif-yml.py` - Script for YAML files with uniform replacement
+- `utils.py` - Shared utility functions for both scripts
+
+### Configuration Files
+
+- `.env` - Directory path configuration  
+- `patterns/always.csv` - Compound phrases and special formatting replacements
+- `patterns/cleanup.csv` - Final cleanup replacements
+- `patterns/never.csv` - Protected terms that should never change
+
+### Dependencies
+
 - `requirements.txt` - Python package dependencies
-- `microsoft.csv` - Example CSV file with replacement rules

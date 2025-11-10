@@ -1,0 +1,28 @@
+# Test YAML file for replacement script
+
+metadata:
+  name: "Azure AI Foundry Demo"
+  description: "This is a test of Azure AI Foundry functionality"
+  tags:
+    - Azure AI Foundry
+    - machine learning
+    - AI
+
+config:
+  service: "Azure AI Foundry"
+  endpoint: "https://example.azureaiservices.com"
+  
+resources:
+  - name: "Azure AI Foundry Resource"
+    type: "ai-service"
+    properties:
+      displayName: "My Azure AI Foundry Instance"
+      
+# Note: (formerly referred to as Azure AI Services) - this should be replaced too in YAML
+# Unlike markdown, YAML doesn't preserve formerly contexts
+
+steps:
+  - name: "Setup Azure AI Foundry"
+    description: "Configure Azure AI Foundry for the project"
+    parameters:
+      foundryName: "test-azure-ai-foundry"

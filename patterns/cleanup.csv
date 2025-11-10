@@ -1,0 +1,22 @@
+search,replace
+Foundry Portal,Foundry portal
+Azure Portal,Azure portal
+an Microsoft,a Microsoft
+An Microsoft,A Microsoft
+an Foundry,a Foundry
+An Foundry,A Foundry
+an [Microsoft,a [Microsoft
+An [Microsoft,A [Microsoft
+an [Foundry,a [Foundry
+An [Foundry,A [Foundry
+#standard-deployment-in-azure-ai-foundry-resources,#standard-deployment-in-foundry-resources
+#azure-ai-foundry-project-roles,#foundry-project-roles
+#create-a-guardrail-in-azure-ai-foundry,#create-a-guardrail-in-foundry
+#prerequisite-set-up-steps-for-azure-ai-foundry-projects,#prerequisite-set-up-steps-for-microsoft-foundry-projects
+#azure-ai-foundry-project-configuration-and-region-support,#foundry-project-configuration-and-region-support
+#view-traces-in-the-azure-ai-foundry-portal,#view-traces-in-the-foundry-portal
+#use-entra-groups-with-azure-ai-foundry,#use-entra-groups-with-foundry
+#view-and-request-quotas-in-azure-ai-foundry-portal,#view-and-request-quotas-in-foundry-portal
+#azure-reservations-for-azure-ai-foundry-provisioned-throughput,#azure-reservations-for-foundry-provisioned-throughput
+#important-sizing-azure-ai-foundry-provisioned-throughput-reservation,#important-sizing-foundry-provisioned-throughput-reservation
+#use-microsoft-entra-groups-with-azure-ai-foundry,#use-microsoft-entra-groups-with-foundry

@@ -1,0 +1,11 @@
+search,replace
+Azure AI Foundry Models,Foundry Models
+Azure AI Foundry Agent Service,Foundry Agent Service
+Azure AI Foundry IQ,Foundry IQ
+Azure AI Foundry Tools,Foundry Tools
+Azure AI Foundry Control Plane,Foundry Control Plane
+Azure AI Services,Foundry Tools
+Azure AI services,Foundry Tools
+[Azure AI Foundry],[Microsoft Foundry]
+[Azure AI Foundry portal],[Microsoft Foundry portal]
+# [Azure AI Foundry,# [Foundry
