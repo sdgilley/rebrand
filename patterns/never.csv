@@ -1,7 +1,2 @@
 search
-Azure AI Services (legacy)
-Azure AI Services REST API
-https://azure.microsoft.com/services/cognitive-services/
-Microsoft.CognitiveServices
-azure-ai-services-python
-@azure/ai-services
+Azure OpenAI 
