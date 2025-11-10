@@ -44,9 +44,9 @@ DIRECTORY_PATH=C:\path\to\your\target\directory
 
 The scripts use CSV configuration files in the `patterns/` folder:
 
-- `always.csv` - Terms that are always replaced (compound phrases and special formatting)
+- `never.csv` - Terms that should never be changed
+- `always.csv` - Terms that are always replaced 
 - `cleanup.csv` - Final cleanup replacements applied last
-- `never.csv` - Terms that should never be changed (URLs, code references, etc.)
 
 ## How It Works
 
