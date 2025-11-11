@@ -130,6 +130,165 @@ def safe_replace(text, search_term, replace_term, max_replacements=None, debug_m
     
     return result
 
+def first_mention_replace_in_body(text, search_term, first_replace, subsequent_replace, debug_mode=False):
+    """Replace occurrences with metadata/title getting first_replace, body getting first mention logic.
+    
+    Args:
+        text: The full markdown text to search in
+        search_term: The term to search for
+        first_replace: Replacement for metadata, title, and first occurrence in body
+        subsequent_replace: Replacement for subsequent occurrences in body only
+        debug_mode: Whether to print debug information
+    
+    Returns:
+        str: Text with metadata and title using first_replace, body using first mention logic,
+             except occurrences in 'formerly' contexts which are preserved
+    """
+    import re
+    
+    # Split content into metadata, title, and body sections
+    metadata = ""
+    title_section = ""
+    body_content = text
+    
+    # Handle YAML front matter
+    if text.startswith('---'):
+        parts = text.split('---', 2)
+        if len(parts) >= 3:
+            metadata_content = parts[1]
+            body_content = parts[2]
+            
+            # Replace ALL occurrences in metadata with first_replace
+            metadata_content = metadata_content.replace(search_term, first_replace)
+            metadata = f"---{metadata_content}---"
+    
+    # Find the title (first # heading) in the body content
+    title_match = re.match(r'^(\s*#[^#\n]*\n)', body_content, re.MULTILINE)
+    if title_match:
+        title_section = title_match.group(1)
+        actual_body = body_content[len(title_section):]
+        
+        # Replace ALL occurrences in title with first_replace
+        title_section = title_section.replace(search_term, first_replace)
+    else:
+        actual_body = body_content
+    
+    # Apply first mention logic only to the actual body (after metadata and title)
+    processed_body = first_mention_replace(actual_body, search_term, first_replace, subsequent_replace, debug_mode)
+    
+    # Reconstruct the full text
+    result = metadata + title_section + processed_body
+    
+    if debug_mode:
+        metadata_changes = text.count(search_term) - (title_section + processed_body).count(search_term) if metadata else 0
+        title_changes = title_section.count(first_replace) if title_section else 0
+        if metadata_changes > 0:
+            print(f"    Metadata: {metadata_changes} '{search_term}' → '{first_replace}'")
+        if title_changes > 0:
+            print(f"    Title: {title_changes} '{search_term}' → '{first_replace}'")
+        if processed_body != actual_body:
+            print(f"    Body: Applied first mention logic")
+    
+    return result
+
+def first_mention_replace(text, search_term, first_replace, subsequent_replace, debug_mode=False):
+    """Replace the first occurrence of a term differently from subsequent occurrences.
+    Preserves occurrences in 'formerly' contexts (does not replace them).
+    
+    Args:
+        text: The text to search in
+        search_term: The term to search for
+        first_replace: Replacement for the first occurrence
+        subsequent_replace: Replacement for subsequent occurrences
+        debug_mode: Whether to print debug information
+    
+    Returns:
+        str: Text with first occurrence replaced with first_replace, others with subsequent_replace,
+             except occurrences in 'formerly' contexts which are preserved
+    """
+    import re
+    
+    # Pattern to match "formerly/previously/originally" contexts
+    # Matches: (formerly ... search_term ...) or (previously ... search_term ...)
+    formerly_pattern = r'\([^)]*(?:formerly|previously|originally)[^)]*' + re.escape(search_term) + r'[^)]*\)'
+    
+    # Find all "formerly" contexts to preserve
+    formerly_matches = list(re.finditer(formerly_pattern, text, re.IGNORECASE))
+    
+    # Find all occurrences of the search term
+    all_matches = list(re.finditer(re.escape(search_term), text))
+    
+    if not all_matches:
+        return text
+    
+    # Filter out matches that are inside "formerly" contexts
+    safe_matches = []
+    preserved_count = 0
+    
+    for match in all_matches:
+        start, end = match.span()
+        
+        # Check if this occurrence is inside a "formerly" context
+        in_formerly_context = any(
+            formerly_match.start() <= start < formerly_match.end()
+            for formerly_match in formerly_matches
+        )
+        
+        if in_formerly_context:
+            preserved_count += 1
+        else:
+            safe_matches.append(match)
+    
+    if not safe_matches:
+        if debug_mode and preserved_count > 0:
+            print(f"    Preserved all {preserved_count} '{search_term}' in 'formerly' contexts")
+        return text
+    
+    # Process safe matches from end to beginning to preserve positions
+    result = text
+    for i, match in enumerate(reversed(safe_matches)):
+        start, end = match.span()
+        # The first occurrence is the last one we process (index len-1 when reversed)
+        is_first = (len(safe_matches) - 1 - i) == 0
+        
+        replacement = first_replace if is_first else subsequent_replace
+        result = result[:start] + replacement + result[end:]
+    
+    if debug_mode:
+        first_count = 1 if safe_matches else 0
+        subsequent_count = len(safe_matches) - 1 if len(safe_matches) > 1 else 0
+        if first_count > 0:
+            print(f"    First mention: '{search_term}' → '{first_replace}'")
+        if subsequent_count > 0:
+            print(f"    Subsequent {subsequent_count} mentions: '{search_term}' → '{subsequent_replace}'")
+        if preserved_count > 0:
+            print(f"    Preserved {preserved_count} '{search_term}' in 'formerly' contexts")
+    
+    return result
+
+def load_first_mention_csv(csv_file, debug_mode=False):
+    """Load first mention replacements from a CSV file with term,first_replace,subsequent_replace columns.
+    
+    Args:
+        csv_file: Path to the CSV file
+        debug_mode: Whether to print debug information
+    
+    Returns:
+        list: List of (term, first_replace, subsequent_replace) tuples
+    """
+    replacements = []
+    if os.path.exists(csv_file):
+        df = pd.read_csv(csv_file)
+        for _, row in df.iterrows():
+            replacements.append((row['term'], row['first_replace'], row['subsequent_replace']))
+        if debug_mode:
+            print(f"Loaded {len(replacements)} first mention rules from {csv_file}")
+    else:
+        if debug_mode:
+            print(f"No {csv_file} found, no first mention replacements will be applied")
+    
+    return replacements
+
 def generate_article_cleanup_rules(always_csv_path, debug_mode=False):
     """Generate 'an X' -> 'a X' cleanup rules from always.csv patterns.
     

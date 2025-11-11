@@ -2,19 +2,9 @@ search,replace
 # [Azure AI Foundry,# [Foundry
 [Azure AI Foundry],[Microsoft Foundry]
 [Azure AI Foundry portal],[Microsoft Foundry portal]
-Azure AI Content Understanding,Content Understanding
-Azure AI Document Intelligence,Document Intelligence
-Azure AI Foundry Agent Service,Foundry Agent Service
 Azure AI Foundry Client,Microsoft Foundry Client
 Azure AI Foundry client,Microsoft Foundry client
 Azure AI Foundry Control Plane,Foundry Control Plane
-Azure AI Foundry IQ,Foundry IQ
-Azure AI Foundry Models,Foundry Models
-Azure AI Foundry SDK,Microsoft Foundry 
 Azure AI Foundry Tools,Foundry Tools
-Azure AI Language,Language
 Azure AI Services,Foundry Tools
 Azure AI services,Foundry Tools
-Azure AI Speech,Speech
-Azure AI Translator,Translator
-Azure AI Vision,Vision

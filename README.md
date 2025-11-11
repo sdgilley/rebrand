@@ -1,6 +1,6 @@
 # Azure AI Foundry Rebranding Scripts
 
-Specialized scripts for replacing terminology across markdown and YAML files, with intelligent handling of first mentions and context preservation.
+Specialized scripts for replacing terminology across markdown and YAML files, with intelligent **first mention differentiation** and context preservation.
 
 ![Rebrand Tool](media/replace.png)
 
@@ -44,9 +44,27 @@ DIRECTORY_PATH=C:\path\to\your\target\directory
 
 The scripts use CSV configuration files in the `patterns/` folder:
 
+- `first_mention.csv` - **NEW**: First mention differentiation rules (term,first_replace,subsequent_replace)
 - `never.csv` - Terms that should never be changed
 - `always.csv` - Terms that are always replaced 
 - `cleanup.csv` - Final cleanup replacements applied last
+
+### First Mention Configuration (`first_mention.csv`)
+
+**NEW**: This file controls first mention differentiation with three columns:
+
+- `term` - The original term to replace
+- `first_replace` - Replacement for metadata, titles, and first body occurrence
+- `subsequent_replace` - Replacement for subsequent body occurrences
+
+**Example entries**:
+
+```csv
+term,first_replace,subsequent_replace
+Azure AI Foundry,Microsoft Foundry,Foundry
+Azure AI Document Intelligence,Document Intelligence in Foundry Tools,Document Intelligence
+Azure AI Speech,Speech in Foundry Tools,Speech
+```
 
 When you modify `always.csv` - run `generate_article_cleanup.py` afterwards to take care of variations of AN Azure that should now ready A XXX. (Make sure you REVIEW the new always.csv to make sure that the new replacements are correct.)
 
@@ -54,32 +72,54 @@ When you modify `always.csv` - run `generate_article_cleanup.py` afterwards to t
 
 ### Markdown Files (`rebrand-aif-md.py`)
 
-This script implements sophisticated replacement logic for `.md` files:
+This script implements replacement logic for `.md` files with **first mention differentiation**:
 
-1. **Front Matter Detection**: Detects YAML front matter and applies different rules
-2. **First Mention Logic**:
-   - In metadata/front matter: "Azure AI Foundry" → "Microsoft Foundry"
-   - First occurrence in body: "Azure AI Foundry" → "Microsoft Foundry"
-   - Subsequent occurrences: "Azure AI Foundry" → "Foundry"
-3. **Context Preservation**: Preserves historical references with "formerly", "previously", "originally"
-4. **Protection**: Never-replace terms are protected during processing
-5. **Processing Order**:
+1. **First Mention Logic for ALL patterns** from `first_mention.csv`:
+   - **Metadata & Titles**: All occurrences → First replacement term
+   - **Body**: First occurrence → First replacement term, Subsequent → Second replacement term
+   - **Example**: "Azure AI Foundry" → "Microsoft Foundry" (first), then "Foundry" (subsequent)
+
+2. **Context Preservation**: Preserves historical references with "formerly", "previously", "originally"
+
+3. **Files Used**:
+   - `patterns/first_mention.csv` - First mention differentiation rules (term,first_replace,subsequent_replace)
+   - `patterns/never.csv` - Protected terms that should never change
+   - `patterns/always.csv` - Compound phrases and special replacements
+   - `patterns/cleanup.csv` - Final cleanup replacements
+
+4. **Processing Order**:
    - Load and protect never-replace terms
-   - Apply replacements from `always.csv`
-   - Apply main "Azure AI Foundry" logic with first mention handling
+   - **Apply first mention logic** from `first_mention.csv`
+   - Apply compound phrases from `always.csv`
    - Apply final cleanup from `cleanup.csv`
    - Restore protected terms
 
+5. **Smart Section Detection**:
+   - Detects YAML front matter automatically
+   - Identifies title headings (# heading)
+   - Applies appropriate rules to each section
+
 ### YAML Files (`rebrand-aif-yml.py`)
 
-This script provides simpler replacement logic for `.yml` files:
+This script applies **uniform replacement** to `.yml/.yaml` files using terms from `first_mention.csv`:
 
-1. **Uniform Replacement**: All "Azure AI Foundry" → "Microsoft Foundry" (no first mention logic)
-2. **Protection**: Never-replace terms are still protected
-3. **Processing Order**:
-   - Load and protect never-replace terms  
-   - Apply replacements from `always.csv`
-   - Replace all "Azure AI Foundry" instances
+1. **Uniform Replacement for ALL patterns** from `first_mention.csv`:
+   - ALL occurrences → First replacement term (no differentiation)
+   - **Example**: "Azure AI Foundry" → "Microsoft Foundry" (all occurrences)
+   - **Example**: "Azure AI Speech" → "Speech in Foundry Tools" (all occurrences)
+
+2. **Context Preservation**: Preserves historical references with "formerly", "previously", "originally"
+
+3. **Files Used**:
+   - `patterns/first_mention.csv` - Terms with uniform replacement (uses first_replace column)
+   - `patterns/never.csv` - Protected terms that should never change
+   - `patterns/always.csv` - Compound phrases and special replacements
+   - `patterns/cleanup.csv` - Final cleanup replacements
+
+4. **Processing Order**:
+   - Load and protect never-replace terms
+   - **Apply uniform replacements** from `first_mention.csv` (using first_replace)
+   - Apply compound phrases from `always.csv`
    - Apply cleanup from `cleanup.csv`
    - Restore protected terms
 
@@ -109,9 +149,8 @@ This script provides simpler replacement logic for `.yml` files:
 
 After running the script, there are still a few more things you need to look at manually:
 
-* Zone pivots
-* docFx.json - check here for things like the titleSuffix
-* 
+- Zone pivots
+- docFx.json - check here for things like the titleSuffix
 
 ## Files
 
@@ -123,7 +162,8 @@ After running the script, there are still a few more things you need to look at 
 
 ### Configuration Files
 
-- `.env` - Directory path configuration  
+- `.env` - Directory path configuration
+- `patterns/first_mention.csv` - **NEW**: First mention differentiation rules
 - `patterns/always.csv` - Compound phrases and special formatting replacements
 - `patterns/cleanup.csv` - Final cleanup replacements
 - `patterns/never.csv` - Protected terms that should never change

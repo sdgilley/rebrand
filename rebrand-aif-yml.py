@@ -1,10 +1,10 @@
-## Run this script to replace "Azure AI Foundry" terms in .yml/.yaml files
+## Run this script to replace terms in .yml/.yaml files
 # This script goes through all .yml/.yaml files in sub-directories from the specified directory.
-# It replaces "Azure AI Foundry" with "Microsoft Foundry" everywhere (no first mention logic).
-# No "formerly" context preservation - all matches are replaced.
+# It uses the terms from first_mention.csv but applies UNIFORM replacement (all get first_replace).
+# Preserves "formerly" context - protects historical references.
 #
 # Files used:
-# - patterns/special.csv: Special patterns with exact replacements (optional)
+# - patterns/first_mention.csv: Terms to replace (uses first_replace for all occurrences)
 # - patterns/always.csv: Compound phrases that always get specific replacements (optional)  
 # - patterns/cleanup.csv: Final cleanup replacements applied after all other changes (optional)
 #
@@ -14,7 +14,13 @@
 import os
 from dotenv import load_dotenv
 from tqdm import tqdm
-from utils import load_csv_replacements, protect_never_terms, restore_never_terms
+from utils import (
+    load_csv_replacements, 
+    protect_never_terms, 
+    restore_never_terms,
+    load_first_mention_csv,
+    safe_replace
+)
 
 # Load environment variables from .env file
 load_dotenv()
@@ -37,6 +43,7 @@ else:
 # Load replacement patterns from CSV files
 compound_replacements = load_csv_replacements('patterns/always.csv', 'compound replacements', debug_mode=debug_mode)
 cleanup_replacements = load_csv_replacements('patterns/cleanup.csv', 'cleanup replacements', debug_mode=debug_mode)
+first_mention_replacements = load_first_mention_csv('patterns/first_mention.csv', debug_mode=debug_mode)
 
 # Load never-replace terms from never.csv
 never_terms = []
@@ -74,6 +81,15 @@ with tqdm(files_to_process, desc="Processing files", unit="file") as pbar:
         
         original_content = content
         
+        # Apply first mention terms (but uniform replacement - all get first_replace)
+        for term, first_replace, subsequent_replace in first_mention_replacements:
+            if term in content:
+                old_content = content
+                content = safe_replace(content, term, first_replace, debug_mode=debug_mode)
+                if debug_mode and content != old_content:
+                    count = old_content.count(term)
+                    print(f"  Modified {file_path}: {count} occurrence(s) '{term}' → '{first_replace}'")
+        
         # Apply compound phrases from always.csv
         for search_term, replace_term in compound_replacements.items():
             if search_term in content:
@@ -82,15 +98,6 @@ with tqdm(files_to_process, desc="Processing files", unit="file") as pbar:
                 if debug_mode and content != old_content:
                     count = old_content.count(search_term)
                     print(f"  Modified {file_path}: {count} occurrence(s) '{search_term}' → '{replace_term}'")
-        
-        # Replace all "Azure AI Foundry" with "Microsoft Foundry" (no first mention logic)
-        azure_ai_foundry_term = "Azure AI Foundry"
-        if azure_ai_foundry_term in content:
-            old_content = content
-            content = content.replace(azure_ai_foundry_term, "Microsoft Foundry")
-            if debug_mode and content != old_content:
-                count = old_content.count(azure_ai_foundry_term)
-                print(f"  Modified {file_path}: {count} occurrence(s) '{azure_ai_foundry_term}' → 'Microsoft Foundry'")
         
         # Apply cleanup replacements last (after all other changes)
         for search_term, replace_term in cleanup_replacements.items():

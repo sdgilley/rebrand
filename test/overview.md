@@ -115,7 +115,7 @@ Foundry Agent Service provides a production-ready foundation for deploying intel
 
 ## Get started with Foundry Agent Service
 
-To get started with Foundry Agent Service, you need to create an Foundry project in your Azure subscription. 
+To get started with Foundry Agent Service, you need to create a Foundry project in your Azure subscription. 
 
 Start with the [environment setup](environment-setup.md) and [quickstart](quickstart.md) guide if it's your first time using the service.
 1. You can create a project with the required resources. 
