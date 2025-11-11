@@ -1,5 +1,4 @@
 term,first_replace,subsequent_replace
-Azure AI Foundry,Microsoft Foundry,Foundry
 Azure AI Foundry Agent Service,Foundry Agent Service,Agent Service
 Azure AI Foundry IQ,Foundry IQ in Foundry Tools,Foundry IQ
 Azure AI Foundry SDK,Microsoft Foundry SDK,Microsoft Foundry SDK
@@ -14,3 +13,4 @@ Azure AI model catalog,Foundry model catalog,model catalog
 Azure AI Model Catalog,Foundry model catalog,model catalog
 Azure AI Foundry model catalog,Foundry model catalog,model catalog
 Azure AI Foundry Model Catalog,Foundry model catalog,model catalog
+Azure AI Foundry,Microsoft Foundry,Foundry
