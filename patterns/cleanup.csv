@@ -1,15 +1,4 @@
 search,replace
-#azure-ai-foundry-project-configuration-and-region-support,#foundry-project-configuration-and-region-support
-#azure-ai-foundry-project-roles,#foundry-project-roles
-#azure-reservations-for-azure-ai-foundry-provisioned-throughput,#azure-reservations-for-foundry-provisioned-throughput
-#create-a-guardrail-in-azure-ai-foundry,#create-a-guardrail-in-foundry
-#important-sizing-azure-ai-foundry-provisioned-throughput-reservation,#important-sizing-foundry-provisioned-throughput-reservation
-#prerequisite-set-up-steps-for-azure-ai-foundry-projects,#prerequisite-set-up-steps-for-microsoft-foundry-projects
-#standard-deployment-in-azure-ai-foundry-resources,#standard-deployment-in-foundry-resources
-#use-entra-groups-with-azure-ai-foundry,#use-entra-groups-with-foundry
-#use-microsoft-entra-groups-with-azure-ai-foundry,#use-microsoft-entra-groups-with-foundry
-#view-and-request-quotas-in-azure-ai-foundry-portal,#view-and-request-quotas-in-foundry-portal
-#view-traces-in-the-azure-ai-foundry-portal,#view-traces-in-the-foundry-portal
 An Foundry,A Foundry
 An Language,A Language
 An Microsoft,A Microsoft
@@ -36,3 +25,28 @@ an [Microsoft,a [Microsoft
 an [Speech,a [Speech
 an [Translator,a [Translator
 an [Vision,a [Vision
+#adjust-an-application-to-use-a-foundry-resource-for-speech-with-a-private-endpoint,#adjust-an-application-to-use-a-foundry-resource-for-speech-with-a-private-endpoint
+#adjust-an-application-to-use-an-ai-foundry-resource-for-speech-with-a-private-endpoint,#adjust-an-application-to-use-a-foundry-resource-for-speech-with-a-private-endpoint
+#adjust-an-application-to-use-an-ai-foundry-resource-for-speech-without-private-endpoints,#adjust-an-application-to-use-a-foundry-resource-for-speech-without-private-endpoints
+#authenticate-with-an-ai-foundry-resource-key,#authenticate-with-a-foundry-resource-key
+#azure-ai-foundry-project-configuration-and-region-support,#foundry-project-configuration-and-region-support
+#azure-ai-foundry-project-roles,#foundry-project-roles
+#azure-ai-foundry-tools-container-security,#microsoft-foundry-tools-container-security
+#azure-reservations-for-azure-ai-foundry-provisioned-throughput,#azure-reservations-for-foundry-provisioned-throughput
+#create-a-guardrail-in-azure-ai-foundry,#create-a-guardrail-in-foundry
+#create-a-new-azure-ai-language-resource-and-azure-storage-account,#create-a-new-language-resource-and-azure-storage-account
+#create-a-new-azure-ai-foundry-resource,#create-a-new-foundry-resource
+#create-a-new-foundry-resource,#create-your-first-resource
+#create-a-new-language-resource-and-azure-storage-account,#step-3-connect-your-language-resource
+#deploy-an-openai-model-in-azure-ai-foundry,#deploy-an-openai-model-in-foundry
+#important-sizing-azure-ai-foundry-provisioned-throughput-reservation,#important-sizing-foundry-provisioned-throughput-reservation
+#option-1-configure-an-azure-ai-foundry-resource,#option-1-configure-a-foundry-resource
+#prerequisite-set-up-steps-for-azure-ai-foundry-projects,#prerequisite-set-up-steps-for-microsoft-foundry-projects
+#standard-deployment-in-azure-ai-foundry-resources,#standard-deployment-in-foundry-resources
+#step-2-deploy-an-openai-model-in-azure-ai-foundry-required,#step-2-deploy-an-openai-model-in-foundry-required
+#use-entra-groups-with-azure-ai-foundry,#use-entra-groups-with-foundry
+#use-microsoft-entra-groups-with-azure-ai-foundry,#use-microsoft-entra-groups-with-foundry
+#use-an-ai-foundry-resource-for-speech-that-has-a-custom-domain-name-but-that-doesnt-have-allowed-virtual-networks,#use-a-foundry-resource-for-speech-that-has-a-custom-domain-name-but-that-doesnt-have-allowed-virtual-networks
+#view-and-request-quotas-in-azure-ai-foundry-portal,#view-and-request-quotas-in-foundry-portal
+#view-traces-in-the-azure-ai-foundry-portal,#view-traces-in-the-foundry-portal
+ms.author: vkurpad,ms.author: pafarley

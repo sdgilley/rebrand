@@ -9,6 +9,7 @@
 # - patterns/first_mention.csv: First mention differentiation (term,first_replace,subsequent_replace)
 # - patterns/always.csv: Compound phrases that always get specific replacements (optional)
 # - patterns/cleanup.csv: Final cleanup replacements applied after all other changes (optional)
+# - patterns/skip_folders.csv: Folder names to skip during directory traversal (optional)
 #
 # Environment variables:
 # - DIRECTORY_PATH: Directory to process (required)
@@ -55,10 +56,30 @@ if os.path.exists('patterns/never.csv'):
 elif debug_mode:
     print("No patterns/never.csv found, no terms will be protected")
 
+# Load skip folders from skip_folders.csv
+skip_folders = []
+if os.path.exists('patterns/skip_folders.csv'):
+    skip_df = pd.read_csv('patterns/skip_folders.csv')
+    skip_folders = skip_df['folder_name'].tolist()
+    if debug_mode:
+        print(f"Loaded {len(skip_folders)} folders to skip from patterns/skip_folders.csv")
+elif debug_mode:
+    print("No patterns/skip_folders.csv found, no folders will be skipped")
+
 # Build list of files to process first
 print("Scanning directory...")
 files_to_process = []
 for root, dirs, files in os.walk(path):
+    # Skip directories that are in the skip list
+    original_dirs = dirs[:]  # Make a copy to see what was skipped
+    dirs[:] = [d for d in dirs if d not in skip_folders]
+    
+    # Print skipped directories
+    skipped_dirs = [d for d in original_dirs if d in skip_folders]
+    for skipped_dir in skipped_dirs:
+        full_skipped_path = os.path.join(root, skipped_dir)
+        print(f"Skipped: {full_skipped_path}")
+    
     for file in files:
         if "new-name.md" in file: # special case: skip the new-name file which announces the change.
             continue
