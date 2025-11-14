@@ -1,20 +1,34 @@
 #!/usr/bin/env python3
 """
-Generate article cleanup rules based on always.csv patterns.
+Generate article cleanup rules based on always.csv and first_mention.csv patterns.
 
-This script analyzes always.csv to find patterns where "Azure AI X" becomes just "X"
-and generates corresponding "an X" -> "a X" cleanup rules.
+This script analyzes both always.csv and first_mention.csv to find patterns where 
+"Azure AI X" becomes just "X" and generates corresponding "an X" -> "a X" cleanup rules.
 """
 
 import os
 import pandas as pd
-from utils import generate_article_cleanup_rules
+from utils import generate_article_cleanup_rules, generate_first_mention_cleanup_rules
 
 def main():
     debug_mode = os.getenv('DEBUG', '').lower() == 'true'
     
-    # Generate article cleanup rules
-    cleanup_rules = generate_article_cleanup_rules('patterns/always.csv', debug_mode)
+    # Generate article cleanup rules from both always.csv and first_mention.csv
+    cleanup_rules = []
+    
+    # Get rules from always.csv
+    always_rules = generate_article_cleanup_rules('patterns/always.csv', debug_mode)
+    cleanup_rules.extend(always_rules)
+    
+    # Get rules from first_mention.csv
+    first_mention_rules = generate_first_mention_cleanup_rules('patterns/first_mention.csv', debug_mode)
+    cleanup_rules.extend(first_mention_rules)
+    
+    # Remove duplicates by converting to set and back
+    cleanup_rules = list(set(cleanup_rules))
+    
+    if debug_mode:
+        print(f"Total cleanup rules generated: {len(cleanup_rules)} (after removing duplicates)")
     
     if not cleanup_rules:
         print("No article cleanup rules to generate")

@@ -310,20 +310,20 @@ def generate_article_cleanup_rules(always_csv_path, debug_mode=False):
     df = pd.read_csv(always_csv_path)
     cleanup_rules = []
     
-    # Find patterns where "Azure AI X" becomes just "X" (single word)
+    # Find patterns where "Azure X" becomes just "X" (single word)
     for _, row in df.iterrows():
         search_term = row['search']
         replace_term = row['replace']
         
-        # Skip if not an Azure AI pattern
-        if not search_term.startswith('Azure AI '):
+        # Skip if not an Azure pattern
+        if not search_term.startswith('Azure '):
             continue
             
-        # Extract the service name after "Azure AI "
-        service_name = search_term[9:]  # Remove "Azure AI " prefix
+        # Extract the service name after "Azure "
+        service_name = search_term[6:]  # Remove "Azure " prefix
         
         # Check if replacement is just the service name (single word, no spaces)
-        # This indicates "Azure AI X" -> "X" pattern
+        # This indicates "Azure X" -> "X" pattern
         if replace_term == service_name and ' ' not in service_name:
             # Generate article cleanup variations
             variations = [
@@ -337,5 +337,56 @@ def generate_article_cleanup_rules(always_csv_path, debug_mode=False):
             
             if debug_mode:
                 print(f"Generated article cleanup rules for: {service_name}")
+    
+    return cleanup_rules
+
+def generate_first_mention_cleanup_rules(first_mention_csv_path, debug_mode=False):
+    """Generate 'an X' -> 'a X' cleanup rules from first_mention.csv patterns.
+    
+    Finds patterns in first_mention.csv where "Azure AI X" becomes just "X" in the 
+    subsequent_replace column and generates article cleanup rules for "an X" -> "a X" variations.
+    
+    Args:
+        first_mention_csv_path: Path to the first_mention.csv file
+        debug_mode: Whether to print debug information
+    
+    Returns:
+        list: List of (search, replace) tuples for article cleanup
+    """
+    if not os.path.exists(first_mention_csv_path):
+        if debug_mode:
+            print(f"Warning: {first_mention_csv_path} not found")
+        return []
+    
+    df = pd.read_csv(first_mention_csv_path)
+    cleanup_rules = []
+    
+    # Find patterns where "Azure X" becomes just "X" (single word) in subsequent_replace
+    for _, row in df.iterrows():
+        term = row['term']
+        subsequent_replace = row['subsequent_replace']
+        
+        # Skip if not an Azure pattern
+        if not term.startswith('Azure '):
+            continue
+            
+        # Extract the service name after "Azure "
+        service_name = term[6:]  # Remove "Azure " prefix
+        
+        # Check if subsequent replacement is just the service name (single word, no spaces)
+        # This indicates "Azure X" -> "X" pattern in subsequent mentions
+        if subsequent_replace == service_name and ' ' not in service_name:
+            # Generate article cleanup variations
+            variations = [
+                (f"an {service_name}", f"a {service_name}"),
+                (f"An {service_name}", f"A {service_name}"),
+                (f"an [{service_name}", f"a [{service_name}"),
+                (f"An [{service_name}", f"A [{service_name}"),
+            ]
+            
+            cleanup_rules.extend(variations)
+            
+            if debug_mode:
+                print(f"Generated article cleanup rules for: {service_name} (from first_mention.csv)")
     
     return cleanup_rules

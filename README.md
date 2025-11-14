@@ -8,7 +8,8 @@ Specialized scripts for replacing terminology across markdown and YAML files, wi
 
 - Python 3.7+ installed on your machine. You can download it from the [official Python website](https://www.python.org/downloads/).
 
-## Setup
+<details>
+<summary><h2>Setup</h2></summary>
 
 1. **Clone this repository** and navigate to the project directory:
 
@@ -33,6 +34,8 @@ Specialized scripts for replacing terminology across markdown and YAML files, wi
    pip install -r requirements.txt
    ```
 
+</details>
+
 ## Configuration
 
 **Edit the `.env` file** to specify the directory to process:
@@ -42,35 +45,21 @@ Specialized scripts for replacing terminology across markdown and YAML files, wi
 DIRECTORY_PATH=C:\path\to\your\target\directory
 ```
 
+## Edit patterns
+
 The scripts use CSV configuration files in the `patterns/` folder:
 
-- `first_mention.csv` - **NEW**: First mention differentiation rules (term,first_replace,subsequent_replace)
 - `never.csv` - Terms that should never be changed
-- `always.csv` - Terms that are always replaced 
-- `cleanup.csv` - Final cleanup replacements applied last
+- `always.csv` - Terms that are always replaced
+- `first_mention.csv` - First mention differentiation rules (term,first_replace,subsequent_replace)
+- `cleanup.csv` - Final cleanup replacements applied last.  Add bookmark replacements in here as well as common misspelling or punctuation you want to fix.
 
-### First Mention Configuration (`first_mention.csv`)
-
-**NEW**: This file controls first mention differentiation with three columns:
-
-- `term` - The original term to replace
-- `first_replace` - Replacement for metadata, titles, and first body occurrence
-- `subsequent_replace` - Replacement for subsequent body occurrences
-
-**Example entries**:
-
-```csv
-term,first_replace,subsequent_replace
-Azure AI Foundry,Microsoft Foundry,Foundry
-Azure AI Document Intelligence,Document Intelligence in Foundry Tools,Document Intelligence
-Azure AI Speech,Speech in Foundry Tools,Speech
-```
-
-When you modify `always.csv` - run `generate_article_cleanup.py` afterwards to take care of variations of AN Azure that should now ready A XXX. (Make sure you REVIEW the new always.csv to make sure that the new replacements are correct.)
+⚠️ When you modify either `first_mention.sv` or `always.csv` - run `generate_article_cleanup.py` afterwards to take care of variations of AN Azure that should now ready A XXX. These will be added to the `cleanup.csv` file.
+> ⚠️⚠️Make sure you REVIEW the new `cleanup.csv file` to verify that the new replacements are correct.
 
 ## How It Works
 
-### Markdown Files (`rebrand-aif-md.py`)
+### Markdown Files (`rebrand-md.py`)
 
 This script implements replacement logic for `.md` files with **first mention differentiation**:
 
@@ -99,7 +88,7 @@ This script implements replacement logic for `.md` files with **first mention di
    - Identifies title headings (# heading)
    - Applies appropriate rules to each section
 
-### YAML Files (`rebrand-aif-yml.py`)
+### YAML Files (`rebrand-yml.py`)
 
 This script applies **uniform replacement** to `.yml/.yaml` files using terms from `first_mention.csv`:
 
@@ -123,6 +112,30 @@ This script applies **uniform replacement** to `.yml/.yaml` files using terms fr
    - Apply cleanup from `cleanup.csv`
    - Restore protected terms
 
+### Bookmark Cleanup (`fix-bookmarks.py`)
+
+This script applies **only cleanup replacements** to fix bookmarks and links across ALL directories:
+
+1. **Cleanup-Only Processing**:
+   - Processes ALL folders (no directory skipping)
+   - Only applies replacements from `cleanup.csv`
+   - Ideal for fixing bookmarks in files that are normally skipped
+
+2. **Use Cases**:
+   - Fix bookmark references in skipped directories (e.g., content-safety)
+   - Apply cleanup patterns without other replacements
+   - Safe to run multiple times (cleanup patterns are typically harmless)
+
+3. **Files Used**:
+   - `patterns/cleanup.csv` - Cleanup replacements (typically bookmark fixes)
+   - `patterns/never.csv` - Protected terms that should never change
+
+4. **Processing Order**:
+   - Load and protect never-replace terms
+   - Apply cleanup replacements from `cleanup.csv`
+   - Restore protected terms
+   - Report number of files modified
+
 ## Usage
 
 1. **Create a new branch** in your fork of azure-ai-docs-pr, based on your release branch.
@@ -130,11 +143,15 @@ This script applies **uniform replacement** to `.yml/.yaml` files using terms fr
 1. **Run the appropriate script** from this repo:
 
    ```bash
-   # For markdown files
-   python rebrand-aif-md.py
+   # For markdown files (with folder skipping)
+   python rebrand-md.py
    
    # For YAML files  
-   python rebrand-aif-yml.py
+   python rebrand-yml.py
+   
+   # For bookmark cleanup (processes ALL folders)
+   # only necessary if warnings appear because of files outside the folders you rebranded.  
+   python fix-bookmarks.py
    ```
 
 
@@ -147,7 +164,7 @@ This script applies **uniform replacement** to `.yml/.yaml` files using terms fr
 
 ## What it doesn't do
 
-After running the script, there are still a few more things you need to look at manually:
+If you only use the scripts on a sub-folder, make sure you also check these files outside that folder:
 
 - Zone pivots
 - docFx.json - check here for things like the titleSuffix
@@ -156,14 +173,15 @@ After running the script, there are still a few more things you need to look at 
 
 ### Core Scripts
 
-- `rebrand-aif-md.py` - Main script for markdown files with first mention logic
-- `rebrand-aif-yml.py` - Script for YAML files with uniform replacement
-- `utils.py` - Shared utility functions for both scripts
+- `rebrand-md.py` - Main script for markdown files with first mention logic
+- `rebrand-yml.py` - Script for YAML files with uniform replacement
+- `fix-bookmarks.py` - Bookmark cleanup script (processes ALL folders)
+- `utils.py` - Shared utility functions for all scripts
 
 ### Configuration Files
 
 - `.env` - Directory path configuration
-- `patterns/first_mention.csv` - **NEW**: First mention differentiation rules
+- `patterns/first_mention.csv` - First mention differentiation rules
 - `patterns/always.csv` - Compound phrases and special formatting replacements
 - `patterns/cleanup.csv` - Final cleanup replacements
 - `patterns/never.csv` - Protected terms that should never change
