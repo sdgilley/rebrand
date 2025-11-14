@@ -137,7 +137,7 @@ This script applies **only cleanup replacements** to fix bookmarks and links acr
    - Restore protected terms
    - Report number of files modified
 
-<details>
+</details>
 
 ## Usage
 
