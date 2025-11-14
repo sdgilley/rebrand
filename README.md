@@ -57,7 +57,8 @@ The scripts use CSV configuration files in the `patterns/` folder:
 ⚠️ When you modify either `first_mention.sv` or `always.csv` - run `generate_article_cleanup.py` afterwards to take care of variations of AN Azure that should now ready A XXX. These will be added to the `cleanup.csv` file.
 > ⚠️⚠️Make sure you REVIEW the new `cleanup.csv file` to verify that the new replacements are correct.
 
-## How It Works
+<details>
+<summary><h2>How It Works</h2></summary>
 
 ### Markdown Files (`rebrand-md.py`)
 
@@ -135,6 +136,8 @@ This script applies **only cleanup replacements** to fix bookmarks and links acr
    - Apply cleanup replacements from `cleanup.csv`
    - Restore protected terms
    - Report number of files modified
+
+<details>
 
 ## Usage
 
