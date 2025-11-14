@@ -1,4 +1,7 @@
 search,replace
+ms.author: vkurpad,ms.author: pafarley
+Azure Portal,Azure portal
+Foundry Portal,Foundry portal
 An Foundry,A Foundry
 An Language,A Language
 An Microsoft,A Microsoft
@@ -11,8 +14,6 @@ An [Microsoft,A [Microsoft
 An [Speech,A [Speech
 An [Translator,A [Translator
 An [Vision,A [Vision
-Azure Portal,Azure portal
-Foundry Portal,Foundry portal
 an Foundry,a Foundry
 an Language,a Language
 an Microsoft,a Microsoft
@@ -49,4 +50,5 @@ an [Vision,a [Vision
 #use-an-ai-foundry-resource-for-speech-that-has-a-custom-domain-name-but-that-doesnt-have-allowed-virtual-networks,#use-a-foundry-resource-for-speech-that-has-a-custom-domain-name-but-that-doesnt-have-allowed-virtual-networks
 #view-and-request-quotas-in-azure-ai-foundry-portal,#view-and-request-quotas-in-foundry-portal
 #view-traces-in-the-azure-ai-foundry-portal,#view-traces-in-the-foundry-portal
-ms.author: vkurpad,ms.author: pafarley
+#microsoft-foundry-tools-container-security,#foundry-tools-container-security
+#import-an-existing-azure-ai-project,#import-an-existing-foundry-project
