@@ -17,18 +17,18 @@ Specialized scripts for replacing terminology across markdown and YAML files, wi
    cd rebrand
    ```
 
-2. **Create a virtual environment** (recommended):
+1. **Create a virtual environment** (recommended):
 
    ```bash
    python -m venv venv
    ```
 
-3. **Activate the virtual environment**:
+1. **Activate the virtual environment**:
    - On Windows (PowerShell): `.\venv\Scripts\Activate.ps1`
    - On Windows (Command Prompt): `.\venv\Scripts\activate.bat`
    - On macOS/Linux: `source venv/bin/activate`
 
-4. **Install required packages**:
+1. **Install required packages**:
 
    ```bash
    pip install -r requirements.txt
@@ -53,91 +53,10 @@ The scripts use CSV configuration files in the `patterns/` folder:
 - `always.csv` - Terms that are always replaced
 - `first_mention.csv` - First mention differentiation rules (term,first_replace,subsequent_replace)
 - `cleanup.csv` - Final cleanup replacements applied last.  Add bookmark replacements in here as well as common misspelling or punctuation you want to fix.
+- `skip_folders.csv` - Folder names to skip during directory traversal (used by `rebrand-md.py` and `rebrand-yml.py`, but NOT by `fix-bookmarks.py`)
 
 ⚠️ When you modify either `first_mention.sv` or `always.csv` - run `generate_article_cleanup.py` afterwards to take care of variations of AN Azure that should now ready A XXX. These will be added to the `cleanup.csv` file.
 > ⚠️⚠️Make sure you REVIEW the new `cleanup.csv file` to verify that the new replacements are correct.
-
-<details>
-<summary><h2>How It Works</h2></summary>
-
-### Markdown Files (`rebrand-md.py`)
-
-This script implements replacement logic for `.md` files with **first mention differentiation**:
-
-1. **First Mention Logic for ALL patterns** from `first_mention.csv`:
-   - **Metadata & Titles**: All occurrences → First replacement term
-   - **Body**: First occurrence → First replacement term, Subsequent → Second replacement term
-   - **Example**: "Azure AI Foundry" → "Microsoft Foundry" (first), then "Foundry" (subsequent)
-
-2. **Context Preservation**: Preserves historical references with "formerly", "previously", "originally"
-
-3. **Files Used**:
-   - `patterns/first_mention.csv` - First mention differentiation rules (term,first_replace,subsequent_replace)
-   - `patterns/never.csv` - Protected terms that should never change
-   - `patterns/always.csv` - Compound phrases and special replacements
-   - `patterns/cleanup.csv` - Final cleanup replacements
-
-4. **Processing Order**:
-   - Load and protect never-replace terms
-   - **Apply first mention logic** from `first_mention.csv`
-   - Apply compound phrases from `always.csv`
-   - Apply final cleanup from `cleanup.csv`
-   - Restore protected terms
-
-5. **Smart Section Detection**:
-   - Detects YAML front matter automatically
-   - Identifies title headings (# heading)
-   - Applies appropriate rules to each section
-
-### YAML Files (`rebrand-yml.py`)
-
-This script applies **uniform replacement** to `.yml/.yaml` files using terms from `first_mention.csv`:
-
-1. **Uniform Replacement for ALL patterns** from `first_mention.csv`:
-   - ALL occurrences → First replacement term (no differentiation)
-   - **Example**: "Azure AI Foundry" → "Microsoft Foundry" (all occurrences)
-   - **Example**: "Azure AI Speech" → "Speech in Foundry Tools" (all occurrences)
-
-2. **Context Preservation**: Preserves historical references with "formerly", "previously", "originally"
-
-3. **Files Used**:
-   - `patterns/first_mention.csv` - Terms with uniform replacement (uses first_replace column)
-   - `patterns/never.csv` - Protected terms that should never change
-   - `patterns/always.csv` - Compound phrases and special replacements
-   - `patterns/cleanup.csv` - Final cleanup replacements
-
-4. **Processing Order**:
-   - Load and protect never-replace terms
-   - **Apply uniform replacements** from `first_mention.csv` (using first_replace)
-   - Apply compound phrases from `always.csv`
-   - Apply cleanup from `cleanup.csv`
-   - Restore protected terms
-
-### Bookmark Cleanup (`fix-bookmarks.py`)
-
-This script applies **only cleanup replacements** to fix bookmarks and links across ALL directories:
-
-1. **Cleanup-Only Processing**:
-   - Processes ALL folders (no directory skipping)
-   - Only applies replacements from `cleanup.csv`
-   - Ideal for fixing bookmarks in files that are normally skipped
-
-2. **Use Cases**:
-   - Fix bookmark references in skipped directories (e.g., content-safety)
-   - Apply cleanup patterns without other replacements
-   - Safe to run multiple times (cleanup patterns are typically harmless)
-
-3. **Files Used**:
-   - `patterns/cleanup.csv` - Cleanup replacements (typically bookmark fixes)
-   - `patterns/never.csv` - Protected terms that should never change
-
-4. **Processing Order**:
-   - Load and protect never-replace terms
-   - Apply cleanup replacements from `cleanup.csv`
-   - Restore protected terms
-   - Report number of files modified
-
-</details>
 
 ## Usage
 
@@ -172,7 +91,97 @@ If you only use the scripts on a sub-folder, make sure you also check these file
 - Zone pivots
 - docFx.json - check here for things like the titleSuffix
 
-## Files
+<details>
+<summary><h2>How It Works</h2></summary>
+
+### Markdown Files (`rebrand-md.py`)
+
+This script implements replacement logic for `.md` files with **first mention differentiation**:
+
+1. **First Mention Logic for ALL patterns** from `first_mention.csv`:
+   - **Metadata & Titles**: All occurrences → First replacement term
+   - **Body**: First occurrence → First replacement term, Subsequent → Second replacement term
+   - **Example**: "Azure AI Foundry" → "Microsoft Foundry" (first), then "Foundry" (subsequent)
+
+1. **Context Preservation**: Preserves historical references with "formerly", "previously", "originally"
+
+1. **Directory Skipping**: Uses `patterns/skip_folders.csv` to skip specified folders during processing (e.g., `content-safety`, `anomaly-detector`)
+
+1. **Files Used**:
+   - `patterns/first_mention.csv` - First mention differentiation rules (term,first_replace,subsequent_replace)
+   - `patterns/never.csv` - Protected terms that should never change
+   - `patterns/always.csv` - Compound phrases and special replacements
+   - `patterns/cleanup.csv` - Final cleanup replacements
+   - `patterns/skip_folders.csv` - Folder names to skip during directory traversal
+
+1. **Processing Order**:
+   - Load and protect never-replace terms
+   - **Apply first mention logic** from `first_mention.csv`
+   - Apply compound phrases from `always.csv`
+   - Apply final cleanup from `cleanup.csv`
+   - Restore protected terms
+
+1. **Smart Section Detection**:
+   - Detects YAML front matter automatically
+   - Identifies title headings (# heading)
+   - Applies appropriate rules to each section
+
+### YAML Files (`rebrand-yml.py`)
+
+This script applies **uniform replacement** to `.yml/.yaml` files using terms from `first_mention.csv`:
+
+1. **Uniform Replacement for ALL patterns** from `first_mention.csv`:
+   - ALL occurrences → First replacement term (no differentiation)
+   - **Example**: "Azure AI Foundry" → "Microsoft Foundry" (all occurrences)
+   - **Example**: "Azure AI Speech" → "Speech in Foundry Tools" (all occurrences)
+
+1. **Context Preservation**: Preserves historical references with "formerly", "previously", "originally"
+
+1. **Directory Skipping**: Uses `patterns/skip_folders.csv` to skip specified folders during processing
+
+1. **Files Used**:
+   - `patterns/first_mention.csv` - Terms with uniform replacement (uses first_replace column)
+   - `patterns/never.csv` - Protected terms that should never change
+   - `patterns/always.csv` - Compound phrases and special replacements
+   - `patterns/cleanup.csv` - Final cleanup replacements
+   - `patterns/skip_folders.csv` - Folder names to skip during directory traversal
+
+1. **Processing Order**:
+   - Load and protect never-replace terms
+   - **Apply uniform replacements** from `first_mention.csv` (using first_replace)
+   - Apply compound phrases from `always.csv`
+   - Apply cleanup from `cleanup.csv`
+   - Restore protected terms
+
+### Bookmark Cleanup (`fix-bookmarks.py`)
+
+This script applies **only cleanup replacements** to fix bookmarks and links across ALL directories:
+
+1. **Cleanup-Only Processing**:
+   - Processes ALL folders (no directory skipping)
+   - Only applies replacements from `cleanup.csv`
+   - Ideal for fixing bookmarks in files that are normally skipped
+
+1. **Use Cases**:
+   - Fix bookmark references in skipped directories (e.g., content-safety)
+   - Apply cleanup patterns without other replacements
+   - Safe to run multiple times (cleanup patterns are typically harmless)
+
+1. **Files Used**:
+   - `patterns/cleanup.csv` - Cleanup replacements (typically bookmark fixes)
+   - `patterns/never.csv` - Protected terms that should never change
+
+1. **Processing Order**:
+   - Load and protect never-replace terms
+   - Apply cleanup replacements from `cleanup.csv`
+   - Restore protected terms
+   - Report number of files modified
+
+</details>
+
+
+<details>
+<summary><h2>Files</h2></summary>
 
 ### Core Scripts
 
@@ -192,3 +201,5 @@ If you only use the scripts on a sub-folder, make sure you also check these file
 ### Dependencies
 
 - `requirements.txt` - Python package dependencies
+
+</details>
