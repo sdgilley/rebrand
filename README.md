@@ -199,6 +199,7 @@ This script applies **only cleanup replacements** to fix bookmarks and links acr
 - `patterns/always.csv` - Compound phrases and special formatting replacements
 - `patterns/cleanup.csv` - Final cleanup replacements
 - `patterns/never.csv` - Protected terms that should never change
+- `patterns/skip_folders.csv` - Folder names to skip during directory traversal
 
 ### Dependencies
 
