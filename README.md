@@ -146,6 +146,7 @@ This script applies **uniform replacement** to `.yml/.yaml` files using terms fr
    - `patterns/always.csv` - Compound phrases and special replacements
    - `patterns/cleanup.csv` - Final cleanup replacements
    - `patterns/skip_folders.csv` - Folder names to skip during directory traversal
+   - `patterns/skip_folders.csv` - Folder names to skip during directory traversal (used by `rebrand-md.py` and `rebrand-yml.py`, but NOT by `fix-bookmarks.py`)
 
 1. **Processing Order**:
    - Load and protect never-replace terms
