@@ -117,7 +117,7 @@ This script implements replacement logic for `.md` files with **first mention di
 
 1. **Processing Order**:
    - Load and protect never-replace terms
-   - **Apply first mention logic** from `first_mention.csv`
+   - Apply first mention logic from `first_mention.csv`
    - Apply compound phrases from `always.csv`
    - Apply final cleanup from `cleanup.csv`
    - Restore protected terms
@@ -150,7 +150,7 @@ This script applies **uniform replacement** to `.yml/.yaml` files using terms fr
 
 1. **Processing Order**:
    - Load and protect never-replace terms
-   - **Apply uniform replacements** from `first_mention.csv` (using first_replace)
+   - Apply uniform replacements from `first_mention.csv` (using first_replace)
    - Apply compound phrases from `always.csv`
    - Apply cleanup from `cleanup.csv`
    - Restore protected terms
