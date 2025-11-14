@@ -68,11 +68,12 @@ The scripts use CSV configuration files in the `patterns/` folder:
    # For markdown files (with folder skipping)
    python rebrand-md.py
    
-   # For YAML files  
+   # For YAML files  (with folder skipping)
    python rebrand-yml.py
    
-   # For bookmark cleanup (processes ALL folders)
-   # only necessary if warnings appear because of files outside the folders you rebranded.  
+   # For extra bookmark cleanup (processes ALL folders)
+   # only needed if warnings appear in files outside the folders you rebranded. 
+   # files inside will already have the bookmarks replaced. 
    python fix-bookmarks.py
    ```
 
