@@ -60,7 +60,9 @@ The scripts use CSV configuration files in the `patterns/` folder:
 
 ## Usage
 
-1. **Create a new branch** in your fork of azure-ai-docs-pr, based on your release branch.
+1. **Create a new branch** in your fork of the repo
+
+1. Edit the **.env** file to specify where your local fork is located.  Include path to whatever folder(s) you want to scan. All folders at and below this folder (excluding folders in the skip_folders list) are scanned.
 
 1. **Run the appropriate script** from this repo:
 
@@ -77,11 +79,10 @@ The scripts use CSV configuration files in the `patterns/` folder:
    python fix-bookmarks.py
    ```
 
-
 1. **Review the changes**:
-   - Check git diffs in your fork to verify expected changes
-   - Ensure historical contexts are preserved
-   - Verify never-replace terms remain unchanged
+   - Check git diffs in your fork to verify each change
+   - If the text is referring to a UI element, verify that the replacement is correct.  Many parts of the Foundry portal and Azure portal still have **AI Services** terms present, for example.  Do not replace text unless the UI has been updated.
+
 
 1. If you find more terms you want to add to one of the files, just select all and discard changes in your fork to start again.
 
