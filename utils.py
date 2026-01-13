@@ -72,6 +72,39 @@ def restore_never_terms(text, replacements_map):
         result = result.replace(placeholder, original_term)
     return result
 
+
+def word_boundary_replace(text, search_term, replace_term, debug_mode=False):
+    """Replace text using word boundaries to avoid partial word matches.
+    
+    This function ensures that the search_term only matches complete words,
+    not parts of larger words. For example, "an" will match "an Microsoft" but 
+    not "than Microsoft".
+    
+    Args:
+        text: The text to search in
+        search_term: The term to search for (will be matched as a complete word)
+        replace_term: The replacement term
+        debug_mode: Whether to print debug information
+    
+    Returns:
+        str: Text with word-boundary replacements made
+    """
+    # Build a regex pattern with word boundaries
+    # \b matches at word boundaries (between word and non-word characters)
+    pattern = r'\b' + re.escape(search_term) + r'\b'
+    
+    # Count matches before replacement for debug info
+    matches_before = len(re.findall(pattern, text))
+    
+    # Do the replacement
+    result = re.sub(pattern, replace_term, text)
+    
+    if debug_mode and matches_before > 0:
+        print(f"    Replaced {matches_before} occurrence(s) of '{search_term}' → '{replace_term}' (word boundary)")
+    
+    return result
+
+
 def safe_replace(text, search_term, replace_term, max_replacements=None, debug_mode=False):
     """Replace text while preserving occurrences in 'formerly' contexts.
     
