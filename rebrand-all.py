@@ -15,9 +15,22 @@
 
 import sys
 import os
+import importlib.util
 from dotenv import load_dotenv
-from rebrand_md import rebrand_markdown_files
-from rebrand_yml import rebrand_yaml_files
+
+# Load modules with hyphens in their names using importlib
+def load_module(module_name, file_path):
+    spec = importlib.util.spec_from_file_location(module_name, file_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+# Load the rebrand modules
+rebrand_md = load_module('rebrand_md', os.path.join(os.path.dirname(__file__), 'rebrand-md.py'))
+rebrand_yml = load_module('rebrand_yml', os.path.join(os.path.dirname(__file__), 'rebrand-yml.py'))
+
+rebrand_markdown_files = rebrand_md.rebrand_markdown_files
+rebrand_yaml_files = rebrand_yml.rebrand_yaml_files
 
 # Load environment variables from .env file
 load_dotenv()

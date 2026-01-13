@@ -143,12 +143,8 @@ def rebrand_markdown_files(path=None, debug_mode=None):
             for search_term, replace_term in cleanup_replacements.items():
                 if search_term in content:
                     old_content = content
-                    # Use word boundary matching for single-word replacements (like 'an' -> 'a')
-                    # Use simple string replacement for multi-word or special patterns
-                    if ' ' not in search_term and '[' not in search_term and '#' not in search_term:
-                        content = word_boundary_replace(content, search_term, replace_term, debug_mode)
-                    else:
-                        content = content.replace(search_term, replace_term)
+                    # Always use word boundary replace to avoid partial word matches
+                    content = word_boundary_replace(content, search_term, replace_term, debug_mode)
                     if content != old_content:
                         cleanup_changes += 1
                         if debug_mode:

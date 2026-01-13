@@ -76,22 +76,46 @@ def restore_never_terms(text, replacements_map):
 def word_boundary_replace(text, search_term, replace_term, debug_mode=False):
     """Replace text using word boundaries to avoid partial word matches.
     
-    This function ensures that the search_term only matches complete words,
-    not parts of larger words. For example, "an" will match "an Microsoft" but 
-    not "than Microsoft".
+    This function ensures that search terms match complete words, not parts of
+    larger words. For example, "an" matches "an Microsoft" but not "than Microsoft".
+    
+    Intelligently applies word boundaries based on the structure of the search term:
+    - For pure words: applies \b on both sides
+    - For patterns with non-word characters (# [ etc): only applies \b where appropriate
+    - For multi-word patterns: applies \b to the first word to prevent partial matches
     
     Args:
         text: The text to search in
-        search_term: The term to search for (will be matched as a complete word)
+        search_term: The term to search for
         replace_term: The replacement term
         debug_mode: Whether to print debug information
     
     Returns:
         str: Text with word-boundary replacements made
     """
-    # Build a regex pattern with word boundaries
-    # \b matches at word boundaries (between word and non-word characters)
-    pattern = r'\b' + re.escape(search_term) + r'\b'
+    escaped_term = re.escape(search_term)
+    
+    # Check if first character is a word character
+    first_char_is_word = search_term[0].isalnum() or search_term[0] == '_'
+    # Check if last character is a word character
+    last_char_is_word = search_term[-1].isalnum() or search_term[-1] == '_'
+    
+    # Build pattern: add word boundaries only where the adjacent character is a word character
+    pattern = ''
+    if first_char_is_word:
+        pattern += r'\b'
+    pattern += escaped_term
+    if last_char_is_word:
+        pattern += r'\b'
+    
+    # Special handling for multi-word patterns like "an Microsoft"
+    # Apply word boundary after first word to prevent matching "than Microsoft"
+    if ' ' in search_term:
+        words = search_term.split(' ', 1)
+        first_word = words[0]
+        rest = ' ' + words[1]
+        # Rebuild pattern with explicit word boundary after first word
+        pattern = r'\b' + re.escape(first_word) + r'\b' + re.escape(rest)
     
     # Count matches before replacement for debug info
     matches_before = len(re.findall(pattern, text))
