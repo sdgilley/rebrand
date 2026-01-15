@@ -45,18 +45,6 @@ Specialized scripts for replacing terminology across markdown and YAML files, wi
 DIRECTORY_PATH=C:\path\to\your\target\directory
 ```
 
-## Edit patterns
-
-The scripts use CSV configuration files in the `patterns/` folder:
-
-- `never.csv` - Terms that should never be changed
-- `always.csv` - Terms that are always replaced
-- `first_mention.csv` - First mention differentiation rules (term,first_replace,subsequent_replace)
-- `cleanup.csv` - Final cleanup replacements applied last.  Add bookmark replacements in here as well as common misspelling or punctuation you want to fix.
-- `skip_folders.csv` - Folder names to skip during directory traversal (used by `rebrand-md.py` and `rebrand-yml.py`, but NOT by `fix-bookmarks.py`)
-
-⚠️ When you modify either `first_mention.sv` or `always.csv` - run `generate_article_cleanup.py` afterwards to take care of variations of AN Azure XXX that should now ready A XXX. These will be added to the `cleanup.csv` file.
-> ⚠️⚠️Make sure you REVIEW the new `cleanup.csv file` to verify that the new replacements are correct.
 
 ## Usage
 
@@ -96,6 +84,18 @@ If you only use the scripts on a sub-folder, make sure you also check these file
 <details>
 <summary><h2>How It Works</h2></summary>
 
+## Edit patterns
+
+The scripts use CSV configuration files in the `patterns/` folder:
+
+- `never.csv` - Terms that should never be changed
+- `always.csv` - Terms that are always replaced
+- `first_mention.csv` - First mention differentiation rules (term,first_replace,subsequent_replace)
+- `cleanup.csv` - Final cleanup replacements applied last.  Add bookmark replacements in here as well as common misspelling or punctuation you want to fix.
+- `skip_folders.csv` - Folder names to skip during directory traversal (used by `rebrand-md.py` and `rebrand-yml.py`, but NOT by `fix-bookmarks.py`)
+
+⚠️ When you modify either `first_mention.sv` or `always.csv` - run `generate_article_cleanup.py` afterwards to take care of variations of AN Azure XXX that should now ready A XXX. These will be added to the `cleanup.csv` file.
+> ⚠️⚠️Make sure you REVIEW the new `cleanup.csv file` to verify that the new replacements are correct.
 ### Markdown Files (`rebrand-md.py`)
 
 This script implements replacement logic for `.md` files with **first mention differentiation**:
