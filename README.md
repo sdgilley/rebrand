@@ -48,7 +48,7 @@ DIRECTORY_PATH=C:\path\to\your\target\directory
 
 ## Usage
 
-1. **Create a new branch** in your fork of the repo
+1. **Create a new branch** in your fork of the repo you are rebranding.
 
 1. Edit the **.env** file to specify where your local fork is located.  Include path to whatever folder(s) you want to scan. All folders at and below this folder (excluding folders in the skip_folders list) are scanned.
 
