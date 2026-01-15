@@ -1,6 +1,6 @@
 # Azure AI Foundry Rebranding Scripts
 
-Specialized scripts for replacing terminology across markdown and YAML files, with intelligent **first mention differentiation** and context preservation.
+Specialized scripts for replacing terminology across markdown and YAML files, with intelligent **first mention differentiation** and context preservation. This repo currently contain patterns to rebrand Azure AI Foundry and Azure AI Services.  You could reuse these scripts with different patterns for future rebranding efforts.
 
 ![Rebrand Tool](media/replace.png)
 
@@ -38,7 +38,7 @@ Specialized scripts for replacing terminology across markdown and YAML files, wi
 
 ## Configuration
 
-**Edit the `.env` file** to specify the directory to process:
+**Edit the `.env` file** to specify the directory containing your local fork of the repository you wish to rebrand.
 
 ```env
 # Directory path to process
@@ -52,7 +52,7 @@ DIRECTORY_PATH=C:\path\to\your\target\directory
 
 1. Edit the **.env** file to specify where your local fork is located.  Include path to whatever folder(s) you want to scan. All folders at and below this folder (excluding folders in the skip_folders list) are scanned.
 
-1. **Run the appropriate script** from this repo:
+1. **Run the appropriate script** from the rebrand repo folder:
 
    ```bash
    # For markdown files (with folder skipping)
@@ -69,8 +69,7 @@ DIRECTORY_PATH=C:\path\to\your\target\directory
 
 1. **Review the changes**:
    - Check git diffs in your fork to verify each change
-   - If the text is referring to a UI element, verify that the replacement is correct.  Many parts of the Foundry portal and Azure portal still have **AI Services** terms present, for example.  Do not replace text unless the UI has been updated.
-
+   - If the text is referring to a UI element, verify that the replacement is correct.  For example, many parts of the Foundry portal and Azure portal still have **AI Services** terms present.  Do not replace text unless the UI has been updated.
 
 1. If you find more terms you want to add to one of the files, just select all and discard changes in your fork to start again.
 
@@ -86,7 +85,7 @@ If you only use the scripts on a sub-folder, make sure you also check these file
 
 ## Edit patterns
 
-The scripts use CSV configuration files in the `patterns/` folder:
+The scripts use CSV configuration files in the `patterns/` folder.  These are currently populated with terms for the recent rebranding of Azure AI Foundry and Azure AI Services for Ignite 2025.  To reuse the script for future rebranding, substitute your own terms in these files instead.
 
 - `never.csv` - Terms that should never be changed
 - `always.csv` - Terms that are always replaced
@@ -96,7 +95,8 @@ The scripts use CSV configuration files in the `patterns/` folder:
 
 ⚠️ When you modify either `first_mention.sv` or `always.csv` - run `generate_article_cleanup.py` afterwards to take care of variations of AN Azure XXX that should now ready A XXX. These will be added to the `cleanup.csv` file.
 > ⚠️⚠️Make sure you REVIEW the new `cleanup.csv file` to verify that the new replacements are correct.
-### Markdown Files (`rebrand-md.py`)
+
+### Rebrand Markdown Files (`rebrand-md.py`)
 
 This script implements replacement logic for `.md` files with **first mention differentiation**:
 
@@ -128,7 +128,7 @@ This script implements replacement logic for `.md` files with **first mention di
    - Identifies title headings (# heading)
    - Applies appropriate rules to each section
 
-### YAML Files (`rebrand-yml.py`)
+### Rebrand YAML Files (`rebrand-yml.py`)
 
 This script applies **uniform replacement** to `.yml/.yaml` files using terms from `first_mention.csv`:
 
@@ -156,7 +156,7 @@ This script applies **uniform replacement** to `.yml/.yaml` files using terms fr
    - Apply cleanup from `cleanup.csv`
    - Restore protected terms
 
-### Bookmark Cleanup (`fix-bookmarks.py`)
+### Cleanup Bookmarks (`fix-bookmarks.py`)
 
 This script applies **only cleanup replacements** to fix bookmarks and links across ALL directories:
 
@@ -190,6 +190,7 @@ This script applies **only cleanup replacements** to fix bookmarks and links acr
 
 - `rebrand-md.py` - Main script for markdown files with first mention logic
 - `rebrand-yml.py` - Script for YAML files with uniform replacement
+- `rebrand-all.py` - Runs both `rebrand-md` and `rebrand-yml`.
 - `fix-bookmarks.py` - Bookmark cleanup script (processes ALL folders)
 - `utils.py` - Shared utility functions for all scripts
 
