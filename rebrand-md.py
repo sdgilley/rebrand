@@ -15,10 +15,10 @@
 # - DIRECTORY_PATH: Directory to process (required)
 # - DEBUG: Set to 'true' to enable debug output (optional)  
 import os
+import codecs
 from dotenv import load_dotenv
 from tqdm import tqdm
 from utils import load_csv_replacements, safe_replace, protect_never_terms, restore_never_terms, first_mention_replace_in_body, load_first_mention_csv, word_boundary_replace
-
 
 def rebrand_markdown_files(path=None, debug_mode=None):
     """
@@ -108,10 +108,18 @@ def rebrand_markdown_files(path=None, debug_mode=None):
         for file_path in pbar:
             file_count += 1
             
-            # read the file
-            with open(file_path, 'r', encoding='utf-8-sig') as f:
-                content = f.read()
-            
+            # Read the file in binary mode to make the following steps possible:
+            # - Detect a byte-order mark (BOM) if one is present.
+            # - Preserve the original line-ending characters.
+            with open(file_path, 'rb') as f:
+                raw = f.read()
+
+            # Check for a BOM.
+            has_utf8_bom = raw.startswith(codecs.BOM_UTF8)
+
+            # Decode the file to text.
+            content = raw.decode('utf-8-sig')
+
             # Protect never-replace terms first
             content, never_replacements = protect_never_terms(content, never_terms, debug_mode)
             
@@ -154,10 +162,17 @@ def rebrand_markdown_files(path=None, debug_mode=None):
             # Restore never-replace terms
             content = restore_never_terms(content, never_replacements)
             
-            # write the file
-            with open(file_path, 'w', encoding='utf-8') as f:
-                f.write(content)
-    
+            # Encode the file back to UTF-8 bytes.
+            outContentWithBOMPreserved = content.encode('utf-8')
+            
+            # If the file originally had a BOM, add one back in.
+            if has_utf8_bom:
+                outContentWithBOMPreserved = codecs.BOM_UTF8 + outContentWithBOMPreserved
+            
+            # Write the modified content to the file.
+            with open(file_path, 'wb') as f:
+                f.write(outContentWithBOMPreserved)
+            
     print(f'✓ Completed! Total files processed: {file_count}')
     return file_count
 
