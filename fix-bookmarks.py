@@ -14,7 +14,7 @@
 import os
 from dotenv import load_dotenv
 from tqdm import tqdm
-from utils import load_csv_replacements, protect_never_terms, restore_never_terms
+from utils import load_csv_replacements, protect_never_terms, restore_never_terms, word_boundary_replace
 
 # Load environment variables from .env file
 load_dotenv()
@@ -83,7 +83,8 @@ with tqdm(files_to_process, desc="Processing files for cleanup", unit="file") as
         for search_term, replace_term in cleanup_replacements.items():
             if search_term in content:
                 old_content = content
-                content = content.replace(search_term, replace_term)
+                # Use word-boundary replace to avoid partial word matches.
+                content = word_boundary_replace(content, search_term, replace_term, debug_mode)
                 if content != old_content:
                     cleanup_changes += 1
                     if debug_mode:
