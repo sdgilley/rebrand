@@ -3,7 +3,7 @@
 pandas==2.3.3
 
 # Environment variable management
-python-dotenv==1.2.1
+python-dotenv~=1.2.2
 
 # Progress bar display
 tqdm==4.67.1
